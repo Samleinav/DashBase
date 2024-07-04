@@ -1,0 +1,11 @@
+{
+    "id": "Entoma/dashplugin",
+    "name": "Dashplugin",
+    "namespace": "Botble\\Dashplugin\\",
+    "provider": "Botble\\Dashplugin\\Providers\\DashpluginServiceProvider",
+    "author": "",
+    "url": "",
+    "version": "1.0.0",
+    "description": "",
+    "minimum_core_version": "7.3.4"
+}

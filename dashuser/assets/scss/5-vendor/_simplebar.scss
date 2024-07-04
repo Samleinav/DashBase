@@ -1,0 +1,48 @@
+.simplebar-scrollbar:before {
+  background: $simplebar-scrollbar-bg;
+}
+
+.simplebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 0 !important;
+}
+
+[data-simplebar] {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+}
+//custom scrollbar
+.js-simplebar {
+  overflow-y: auto;
+  position: fixed;
+  max-width: 264px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #858796 transparent; /* Firefox */
+}
+#sidebar{
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #858796 transparent; /* Firefox */
+}
+.js-simplebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.js-simplebar::-webkit-scrollbar-thumb {
+  background-color: #858796; 
+  border-radius: 10px;
+  border: 2px solid transparent; /* Espacio alrededor del scrollbar thumb */
+  background-clip: content-box; /* Hace que el color del thumb esté contenido dentro del espacio */
+}
+
+.js-simplebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.js-simplebar::-webkit-scrollbar-corner,
+.js-simplebar::-webkit-resizer {
+  display: none; /* Remueve las flechas */
+}
