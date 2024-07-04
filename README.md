@@ -72,5 +72,5 @@ add in Plugins:
 [license-shield]: https://img.shields.io/github/license/Samleinav/DashBase.svg?style=flat-square
 [license-url]: https://github.com/Samleinav/DashBase/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/samuel-leiton-3a0077152
+[linkedin-url]: https://linkedin.com/in/samuel-leiton-n
 [product-screenshot]: images/screenshot.png
