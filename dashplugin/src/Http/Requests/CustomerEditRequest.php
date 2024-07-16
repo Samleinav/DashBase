@@ -14,6 +14,7 @@ class CustomerEditRequest extends Request
             'last_name' => ['required', 'max:60', 'min:2'],
             'email' => 'required|max:60|min:6|email|unique:ht_customers,email,' . $this->route('customer.id'),
             'phone' => ['nullable', 'string', ...explode('|', BaseHelper::getPhoneValidationRule())],
+            'status' => 'required',
         ];
 
         if ($this->boolean('is_change_password')) {

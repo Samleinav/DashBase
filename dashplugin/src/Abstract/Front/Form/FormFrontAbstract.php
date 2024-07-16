@@ -13,18 +13,43 @@ use Botble\Theme\Facades\Theme;
 
 class FormFrontAbstract extends FormAbstract
 {
+    protected $tabsOpened = false;
+    protected $currentTab = '';
+    protected $onlySave = false;
 
     public function __construct()
-    {
+    {   
+        $this->setTitle(__("Actions"));
         $this->setMethod('POST');
         $this->template(DashHelper::viewPath('forms.base'));
         $this->setFormOption('id', strtolower(Str::slug(Str::snake(static::class))));
         $this->setFormOption('class', 'js-base-form');
     }
 
-    public function renderForm(array $options = [], bool $showStart = true, bool $showFields = true, bool $showEnd = true) : string
+    public function includeFiles(){
+        $this->setFormOptions(['enctype' => 'multipart/form-data']);
+
+        return $this;
+    }
+
+    public function onlySave(){
+        $this->onlySave = true;
+        return $this;
+    }
+
+    public function getActionButtons(): string
     {
-        Assets::addScripts(['form-validation', 'are-you-sure']);
+        if ($this->actionButtons === '') {
+
+            return view('core/base::forms.partials.form-actions',["title"=>$this->title,"onlySave"=>$this->onlySave])->render();
+        }
+
+        return $this->actionButtons;
+    }
+
+    public function renderFront(array $options = [], bool $showStart = true, bool $showFields = true, bool $showEnd = true)
+    {
+        Assets::addScripts(['are-you-sure']);
 
         $class = $this->getFormOption('class');
         $this->setFormOption('class', $class . ' dirty-check');
@@ -36,7 +61,7 @@ class FormFrontAbstract extends FormAbstract
         FormRendering::dispatch($this);
 
         if ($this->getModel() instanceof BaseModel) {
-            apply_filters(BASE_FILTER_BEFORE_RENDER_FORM, $this, $this->getModel());
+           apply_filters(BASE_FILTER_BEFORE_RENDER_FORM, $this, $this->getModel());
         }
 
         $this->setupMetadataFields();
@@ -61,7 +86,7 @@ class FormFrontAbstract extends FormAbstract
 
     
     
-    protected function renderCustom(array $options, bool $showStart, bool $showFields, bool $showEnd)
+    protected function renderCustom(array $options, bool $showStart, bool $showFields, bool $showEnd) 
     {
         $formOptions = $this->buildFormOptionsForFormBuilder(
             $this->formHelper->mergeOptions($this->formOptions, $options)
@@ -73,11 +98,55 @@ class FormFrontAbstract extends FormAbstract
         $model = $this->getModel();
         $exclude = $this->exclude;
         $form = $this;
-        
         return Theme::scope(
         'forms.base', 
         compact('showStart', 'showFields', 'showEnd', 'formOptions', 'fields', 'model', 'exclude', 'form'), 
         DashHelper::viewPath('forms.base'));
     }
+
+    public function tabs($tabs) {
+        $tab_id = "tabs-" . strtolower(Str::snake(static::class));
+        $html = '<ul class="nav nav-tabs" id="'. $tab_id . '" role="tablist">';
+        $first = true;
+
+        foreach ($tabs as $tabId => $tabName) {
+            $activeClass = $first ? 'active' : '';
+            $html .= '<li class="nav-item" role="presentation">
+                        <a class="nav-link ' . $activeClass . '" id="' . $tabId . '" data-bs-toggle="tab" href="#' . $tabId . '-content" role="tab" aria-controls="' . $tabId . '-content" aria-selected="true">' . $tabName . '</a>
+                      </li>';
+            $first = false;
+        }
+
+        $html .= '</ul><div class="tab-content" id="customerTabsContent">';
+
+        $this->tabsOpened = true;
+        $this->currentTab = '';
+
+        return $this->add('openTabs', 'html', ['html' => $html]);
+    }
+
+    public function openTab($tabId) {
+        $activeClass = $this->currentTab === '' ? 'show active' : 'fade';
+        $html = '<div class="tab-pane ' . $activeClass . '" id="' . $tabId . '-content" role="tabpanel" aria-labelledby="' . $tabId . '">';
+        $this->currentTab = $tabId;
+
+        return $this->add('openTab_' . $tabId, 'html', ['html' => $html]);
+    }
+
+    public function closeTab() {
+        $html = '</div>';
+
+        return $this->add('closeTab_' . $this->currentTab, 'html', ['html' => $html]);
+    }
+
+    public function closeTabs() {
+        $html = '</div>';
+
+        $this->tabsOpened = false;
+        $this->currentTab = '';
+
+        return $this->add('closeTabs', 'html', ['html' => $html]);
+    }
+
 
 }

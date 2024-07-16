@@ -1,0 +1,21 @@
+.dropdown-submenu .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-top: -0.125rem;
+    margin-left: 0.125rem;
+}
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu.show {
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+}
+
+li.dropdown .dropdown-menu.show  {
+    margin: 1em 0 0 0;
+}

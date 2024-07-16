@@ -11,34 +11,30 @@
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="canonical" href="https://demo.adminkit.io/pages-blank.html" />
-    
-    <script src="{{ asset('vendor/core/core/base/libraries/jquery.min.js?v=1.5.4') }}"></script>
+    @if( PageTitle::getTitle() )
+        <title>{{ PageTitle::getTitle() }}</title>
+    @endif
     {!! Theme::header() !!}
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    {!! Assets::renderHeader() !!}
     
-    @if(DashHelper::isRenderTable())
-        {!! Assets::renderHeader() !!}
-            <script>
-                window.siteUrl = "{{ BaseHelper::getHomepageUrl() }}";
-            </script>
+    <script type="text/javascript">
+        var BotbleVariables = BotbleVariables || {};
 
-            <script type="text/javascript">
-                'use strict';
-                window.trans = Object.assign(window.trans || {}, JSON.parse('{!! addslashes(json_encode(trans('plugins/marketplace::marketplace'))) !!}'));
-
-                var BotbleVariables = BotbleVariables || {};
-                BotbleVariables.languages = {
-                    tables: {!! json_encode(trans('core/base::tables'), JSON_HEX_APOS) !!},
-                    notices_msg: {!! json_encode(trans('core/base::notices'), JSON_HEX_APOS) !!},
-                    pagination: {!! json_encode(trans('pagination'), JSON_HEX_APOS) !!},
-                    system: {
-                        character_remain: '{{ trans('core/base::forms.character_remain') }}'
-                    }
-                };
-
-                
-            </script>
+    @if (Auth::guard('customer')->check() || Auth::guard()->check())
+        BotbleVariables.languages = {
+            @if(DashHelper::isRenderTable())
+            tables: {{ Js::from(trans('core/base::tables')) }},
+            @endif
+            notices_msg: {{ Js::from(trans('core/base::notices')) }},
+            pagination: {{ Js::from(trans('pagination')) }},
+        };
+    @else
+        BotbleVariables.languages = {
+            notices_msg: {{ Js::from(trans('core/base::notices')) }},
+        };
     @endif
+    </script>
     
     <style>
         body {

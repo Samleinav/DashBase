@@ -25,8 +25,8 @@ class CustomerTable extends TableFrontAbstract
         $this
             ->model(Customer::class)
             ->addActions([
-                EditAction::make()->route('table.customers.edit'),
-                DeleteAction::make()->route('table.customers.destroy'),
+                EditAction::make()->route('public.settings.customers.edit'),
+                DeleteAction::make()->route('public.settings.customers.destroy'),
             ]);
     }
 
@@ -79,7 +79,7 @@ class CustomerTable extends TableFrontAbstract
         return [
             IdColumn::make(),
             NameColumn::make()
-                ->route('customer.edit')
+                ->route('public.settings.customers.edit')
                 ->orderable(false)
                 ->searchable(false),
             EmailColumn::make()->linkable(),
@@ -89,13 +89,13 @@ class CustomerTable extends TableFrontAbstract
 
     public function buttons(): array
     {
-        return $this->addCreateButton(route('table.customers.create'));
+        return $this->addCreateButton(route('public.settings.customers.create'));
     }
 
     public function bulkActions(): array
     {
         return [
-            DeleteBulkAction::make()->permission('customer.destroy'),
+            DeleteBulkAction::make()->permission('public.settings.customers.destroy'),
         ];
     }
 

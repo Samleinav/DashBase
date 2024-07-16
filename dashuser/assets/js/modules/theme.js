@@ -28,19 +28,20 @@ window.theme = theme;
 
 var dashtheme = function (){
   //menu expand
-  mo = () => {
-      const e = document.getElementsByClassName("js-sidebar")[0],
-          t = document.getElementsByClassName("js-sidebar-toggle")[0];
-      e && t && t.addEventListener("click", (() => {
-          e.classList.toggle("collapsed"), e.addEventListener("transitionend", (() => {
-              window.dispatchEvent(new Event("resize"))
-          }))
-      }))
-  };
+    mo = () => {
+        const e = document.getElementsByClassName("js-sidebar")[0],
+            t = document.getElementsByClassName("js-sidebar-toggle")[0];
+        e && t && t.addEventListener("click", (() => {
+            e.classList.toggle("collapsed"), e.addEventListener("transitionend", (() => {
+                window.dispatchEvent(new Event("resize"))
+            }))
+        }))
+    };
 
-  fe = () => {
-      feather.replace();
-  };
+
+    fe = () => {
+        feather.replace();
+    };
 
   mo(), fe()
 }

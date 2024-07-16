@@ -84,7 +84,7 @@
         @endforeach
 
         @php
-            do_action(BASE_ACTION_META_BOXES, 'side', $form->getModel());
+             do_action(BASE_ACTION_META_BOXES, 'side', $form->getModel());
         @endphp
     </div>
 </div>
@@ -96,13 +96,13 @@
 @yield('form_end')
 
 @if ($form->getValidatorClass())
-@if ($form->isUseInlineJs())
-    {!! Assets::scriptToHtml('jquery') !!}
-    {!! Assets::scriptToHtml('form-validation') !!}
-    {!! $form->renderValidatorJs() !!}
-@else
-    @push('footer')
+    @if ($form->isUseInlineJs())
+        {!! Assets::scriptToHtml('jquery') !!}
+        {!! Assets::scriptToHtml('form-validation') !!}
         {!! $form->renderValidatorJs() !!}
-    @endpush
-@endif
+    @else
+        @push('footer')
+            {!! $form->renderValidatorJs() !!}
+        @endpush
+    @endif
 @endif

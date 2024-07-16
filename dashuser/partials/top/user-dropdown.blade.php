@@ -7,14 +7,18 @@
         <img src="{{ $user->avatar_url }}" class="avatar img-fluid rounded" alt="{{ $user->name }}" />
     </a>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="{{ route('customer.profile') }}">
-            <i class="align-middle me-1" data-feather="user"></i> {{ __('Profile') }}
-        </a>
-        <a class="dropdown-item" href="{{ route('customer.settings') }}">
-            <i class="align-middle me-1" data-feather="settings"></i> {{ __('Settings') }}
-        </a>
+        @if($user->hasPermission('user.profile'))
+            <a class="dropdown-item" href="{{ route('public.user.profile') }}">
+                <i class="align-middle me-1" data-feather="user"></i> {{ __('Profile') }}
+            </a>
+        @endif
+        @if($user->hasPermission('settings.index'))
+            <a class="dropdown-item" href="{{ route('public.settings.index') }}">
+                <i class="align-middle me-1" data-feather="settings"></i> {{ __('Settings') }}
+            </a>
+        @endif
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{{ route('customer.logout') }}">
+        <a class="dropdown-item" href="{{ route('public.user.logout') }}">
             <i class="align-middle me-1" data-feather="log-out"></i> {{ __('Logout') }}
         </a>
     </div>

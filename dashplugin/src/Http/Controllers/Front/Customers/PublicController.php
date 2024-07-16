@@ -27,8 +27,10 @@ class PublicController extends BaseController
     public function getIndex()
     {
         SeoHelper::setTitle(__('Account information'));
-
-        return Theme::scope('customer.account.edit-account', [])
+        DashHelper::breadcrumb()
+        ->add(__('Home'), route('public.index'))
+        ->add(__('Profile'), route('public.user.edit-account'));
+        return Theme::scope('customer.account.profile', [])
         ->render();
     }
 
@@ -36,11 +38,11 @@ class PublicController extends BaseController
     {
         SeoHelper::setTitle(__('Profile'));
 
-        Theme::breadcrumb()
+        DashHelper::breadcrumb()
             ->add(__('Home'), route('public.index'))
-            ->add(__('Profile'), route('customer.edit-account'));
+            ->add(__('Profile'), route('public.user.edit-account'));
 
-        return Theme::scope('customer.account.edit-account', [])
+        return Theme::scope('customer.account.profile', [])
             ->render();
     }
 
@@ -57,7 +59,7 @@ class PublicController extends BaseController
         do_action(HANDLE_CUSTOMER_UPDATED_DASH, $customer, $request);
 
         return $response
-            ->setNextUrl(route('customer.edit-account'))
+            ->setNextUrl(route('public.user.edit-account'))
             ->setMessage(__('Update profile successfully!'));
     }
 
@@ -66,7 +68,7 @@ class PublicController extends BaseController
         SeoHelper::setTitle(__('Change Password'));
 
         Theme::breadcrumb()->add(__('Home'), route('public.index'))
-            ->add(__('Change Password'), route('customer.change-password'));
+            ->add(__('Change Password'), route('public.user.change-password'));
 
         return Theme::scope(
             'customer.account.change-password',

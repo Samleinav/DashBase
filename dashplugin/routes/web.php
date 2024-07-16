@@ -12,6 +12,8 @@ use Botble\Dashplugin\Http\Controllers\Settings\GeneralSettingController;
 use Botble\Dashplugin\Http\Controllers\Settings\InvoiceSettingController;
 use Botble\Dashplugin\Http\Controllers\Settings\InvoiceTemplateSettingController;
 
+
+
 Route::group(['namespace' => 'Botble\Dashplugin\Http\Controllers'], function () {
     AdminHelper::registerRoutes(function () {
         Route::group(['prefix' => 'dashplugins', 'as' => 'dashplugin.'], function () {
@@ -20,7 +22,10 @@ Route::group(['namespace' => 'Botble\Dashplugin\Http\Controllers'], function () 
     });
 });
 
-
+/**
+ * Dashboard Routes 
+ * 
+ */
 Route::group(['namespace' => 'Botble\Dashplugin\Http\Controllers', 'middleware' => ['web', 'core']], function () {
     Route::group(['prefix' => BaseHelper::getAdminPrefix() . '/dash', 'middleware' => 'auth'], function () {
         Route::group(['prefix' => 'settings', 'as' => 'dash.settings.', 'permission' => 'dash.settings'], function () {
@@ -53,7 +58,7 @@ Route::group(['namespace' => 'Botble\Dashplugin\Http\Controllers', 'middleware' 
 
 
         Route::group(['prefix' => 'customers', 'as' => 'customer.'], function () {
-            Route::resource('', 'CustomerController')->parameters(['' => 'customer']);
+            //Route::resource('', 'CustomerController')->parameters(['' => 'customer']);
         });
 
         Route::group(['prefix' => 'features', 'as' => 'feature.'], function () {
@@ -92,12 +97,21 @@ Route::group(['namespace' => 'Botble\Dashplugin\Http\Controllers', 'middleware' 
     });
 
 });
+
 /**
  * Routes for customers
  */
 
 if (defined('THEME_MODULE_SCREEN_NAME')) {
     Theme::registerRoutes(function () {
+        /**
+         * Routes for customers
+         * Guest
+         * as customer.
+         * url /
+         * Rutes for customers Authentication
+         * Middleware Guest
+         */
         Route::group([
             'namespace' => 'Botble\Dashplugin\Http\Controllers\Front\Customers',
             'middleware' => ['web', 'core', 'customer.guest'],
@@ -117,7 +131,13 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             Route::post('password/reset', 'ResetPasswordController@reset')->name('password.reset.update');
             Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
         });
-
+        /**
+         * Routes for customers
+         * Customer
+         * as customer.
+         * url /
+         * This is for customers for resend emails or confirm registration
+         */
         Route::group([
             'namespace' => 'Botble\Dashplugin\Http\Controllers\Front\Customers',
             'middleware' => [
@@ -134,94 +154,103 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
         });
 
         Route::group([
-            'namespace' => 'Botble\Dashplugin\Http\Controllers\Front\Customers',
-            'middleware' => ['web', 'core', 'customer'],
+            'middleware' => ['web', 'core', 'customer', 'customer.permission'],
             'as' => 'public.',
-        ], function () {
-
-                Route::get('/', [
-                    'as' => 'index',
-                    'uses' => 'PublicController@getIndex',
-                ]);
-            });
-
-            
-            Route::group([
-                'namespace' => 'Botble\Dashplugin\Http\Controllers',
-                'middleware' => ['web', 'core', 'customer'],
-                'prefix' => 'table',
-                'as' => 'table.',
-            ], function () {
-                    Route::resource('customers', 'CustomerController')->parameters(['' => 'customer']);
-
-                    
-
-                    require core_path('table/routes/web-actions.php');
+            'permission' => 'dashboard.index'], function () {
+                /**
+                 * as public.
+                 * Controllers Front\Customers
+                 */
+                Route::group([
+                    'namespace' => 'Botble\Dashplugin\Http\Controllers\Front\Customers',
+                ], function () {
+                        Route::get('/', [
+                            'as' => 'index',
+                            'uses' => 'PublicController@getIndex',
+                        ]);
                 });
 
+                /** Routes for customers  
+                * customer. 
+                * url /settings/ 
+                * This is for customers For Settings 
+                */
+                Route::group([
+                    'namespace' => 'Botble\Dashplugin\Http\Controllers',
+                    'prefix' => 'settings',
+                    'as' => 'settings.',
+                ], function () {
+
+                    Route::get('', [
+                        'as' => 'index',
+                        'uses' => 'Front\Settings\SettingsController@getIndex',
+                        'permission' => 'settings.index',
+                    ]);
+
+                    Route::group(['prefix' => 'roles', 'as' => 'roles.', 'permission' => 'roles.'], function () {
+                        Route::resource('', 'Front\Settings\RolesCustomerController')->parameters(['' => 'role']);
+                    });
+
+                    Route::group(['prefix' => 'customers', 'as' => 'customers.', 'permission' => 'customers.'], function () {
+                        Route::resource('', 'Front\Settings\CustomerController')->parameters(['' => 'customer']);
+                    });
+
+                });
+                /**
+                 * Routes for user.
+                 */
+                Route::group([
+                    'namespace' => 'Botble\Dashplugin\Http\Controllers\Front',
+                    'prefix' => 'user',
+                    'as' => 'user.',
+                ], function () {
+                
+                    Route::get('logout', 'Customers\LoginController@logout')->name('logout');
+                
+                    Route::get('profile', [
+                        'as' => 'profile',
+                        'uses' => 'Profile\ProfileController@getIndex',
+                        'permission' => 'user.profile',
+
+                    ]);
+                    Route::get('edit-account', [
+                        'as' => 'edit-account',
+                        'uses' => 'Profile\ProfileController@getEditAccount',
+                        'permission' => 'user.edit-account',
+                    ]);
+                    Route::post('edit-account', [
+                        'as' => 'edit-account.post',
+                        'uses' => 'Profile\ProfileController@updateProfile',
+                        'permission' => 'user.edit-account',
+                    ]);
+
+                    Route::get('notifications', [
+                        'as' => 'notifications',
+                        'uses' => 'Profile\ProfileController@getIndex',
+                        'permission' => 'notifications.index',
+                    ]);
+                
+                    
+                });
+
+            });
+
+
+        /**
+         * Routes for table actions
+         * No edit
+         */
         Route::group([
-            'namespace' => 'Botble\Dashplugin\Http\Controllers\Front\Customers',
             'middleware' => ['web', 'core', 'customer'],
-            'prefix' => 'customer',
-            'as' => 'customer.',
+            'prefix' => 'api',
+            'as' => 'api.',
         ], function () {
-            Route::get('logout', 'LoginController@logout')->name('logout');
-
-            Route::get('profile', [
-                'as' => 'profile',
-                'uses' => 'PublicController@getIndex',
-            ]);
-
-            Route::get('settings', [
-                'as' => 'settings',
-                'uses' => 'PublicController@getIndex',
-            ]);
-
-            Route::get('edit-account', [
-                'as' => 'edit-account',
-                'uses' => 'PublicController@getEditAccount',
-            ]);
-
-            Route::get('edit-account', [
-                'as' => 'edit-account',
-                'uses' => 'PublicController@getEditAccount',
-            ]);
-
-            Route::post('edit-account', [
-                'as' => 'edit-account.post',
-                'uses' => 'PublicController@postEditAccount',
-            ]);
-
-            Route::get('change-password', [
-                'as' => 'change-password',
-                'uses' => 'PublicController@getChangePassword',
-            ]);
-
-            Route::post('change-password', [
-                'as' => 'post.change-password',
-                'uses' => 'PublicController@postChangePassword',
-            ]);
-
-            Route::post('avatar', [
-                'as' => 'avatar',
-                'uses' => 'PublicController@postAvatar',
-            ]);
-/** 
-            Route::get('licenses', [
-                'as' => 'bookings',
-                'uses' => 'licenseController@index',
-            ]);
-
-            Route::get('licenses/{id}', [
-                'as' => 'bookings.show',
-                'uses' => 'licenseController@show',
-            ]);
-
-            Route::get('generate-invoice/{id}', [
-                'as' => 'generate-invoice',
-                'uses' => 'licenseController@getGenerateInvoice',
-            ])->wherePrimaryKey();
-*/
+                /**
+                 * Very important
+                 * This web action is for tables on rutes with table
+                 */
+                require core_path('table/routes/web-actions.php');
         });
     });
 }
+

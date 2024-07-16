@@ -5,7 +5,7 @@ namespace Botble\Dashplugin\Models;
 use Botble\Base\Casts\SafeContent;
 use Botble\Dashplugin\Enums\MessageStatusEnum;
 use Botble\Base\Models\BaseModel;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Notification extends BaseModel
 {
     protected $table = 'dash_notifications';
@@ -19,6 +19,7 @@ class Notification extends BaseModel
         'type',
         'customer_id',
         'service_id',
+        'is_global',
     ];
 
     protected $casts = [
@@ -27,10 +28,20 @@ class Notification extends BaseModel
         
     ];
 
-    public function customer() 
+    public function to() 
     {
         return $this->belongsTo(Customer::class, 'customer_id')->withDefault();
     }
+
+    public function users() : BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class, 'dash_global_notifications', 'notification_id', 'customer_id')
+        ->withPivot('is_read')    
+        ->withTimestamps();     
+    }
+
+    
+
 
     public function service()
     {

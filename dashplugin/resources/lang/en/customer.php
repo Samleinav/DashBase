@@ -1,5 +1,7 @@
 <?php
 
+use Botble\Base\Supports\Avatar;
+
 return [
     'name' => 'Customers',
     'create' => 'New customer',
@@ -12,6 +14,7 @@ return [
         'email' => 'Email',
         'email_placeholder' => 'Ex: example@gmail.com',
         'phone' => 'Phone',
+        'avatar' => 'Avatar',
     ],
     'change_password' => 'Change password ?',
     'password' => 'Password',

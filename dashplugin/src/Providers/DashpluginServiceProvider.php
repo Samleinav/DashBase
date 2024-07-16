@@ -15,6 +15,7 @@ use Botble\Dashplugin\Forms\Fronts\Auth\RegisterForm;
 use Botble\Dashplugin\Forms\Fronts\Auth\ResetPasswordForm;
 use Botble\Dashplugin\Http\Middleware\RedirectIfCustomer;
 use Botble\Dashplugin\Http\Middleware\RedirectIfNotCustomer;
+use Botble\Dashplugin\Http\Middleware\CustomerPermissions;
 use Botble\Dashplugin\Http\Requests\Fronts\Auth\ForgotPasswordRequest;
 use Botble\Dashplugin\Http\Requests\Fronts\Auth\LoginRequest;
 use Botble\Dashplugin\Http\Requests\Fronts\Auth\RegisterRequest;
@@ -56,6 +57,7 @@ class DashpluginServiceProvider extends ServiceProvider
         //Middleware for Frontend role customer
         $router->aliasMiddleware('customer', RedirectIfNotCustomer::class);
         $router->aliasMiddleware('customer.guest', RedirectIfCustomer::class);
+        $router->aliasMiddleware('customer.permission', CustomerPermissions::class);
 
         $aliasLoader = AliasLoader::getInstance();
 
@@ -82,7 +84,7 @@ class DashpluginServiceProvider extends ServiceProvider
         $this
             ->setNamespace('plugins/dashplugin')
             ->loadHelpers()
-            ->loadAndPublishConfigurations(["permissions","dash"])
+            ->loadAndPublishConfigurations(["permissions","dash",'front-permissions'])
             ->loadAndPublishTranslations()
             ->loadRoutes()
             ->loadAndPublishViews()

@@ -26,7 +26,6 @@
     <!-- Core JS -->
     
     {!! Theme::footer() !!}
-    @if(DashHelper::isRenderTable())
     {!! Assets::renderFooter() !!} 
-    @endif
+    {!! Theme::partial('common') !!}
     

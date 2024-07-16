@@ -4,11 +4,12 @@ namespace Botble\Dashplugin\Forms;
 
 use Botble\Dashplugin\Enums\CustomerStatusEnum;
 use Botble\Base\Forms\FieldOptions\StatusFieldOption;
-use Botble\Base\Forms\Fields\MediaFileField;
+use Botble\Base\Forms\Fields\MediaImageField;
 use Botble\Base\Forms\Fields\SelectField;
 use Botble\Dashplugin\Http\Requests\CustomerCreateRequest;
 use Botble\Dashplugin\Models\Customer;
 use Botble\Dashplugin\Abstract\Front\Form\FormFrontAbstract;
+use Botble\Dashplugin\Models\CustomerRole;
 
 class CustomerForm extends FormFrontAbstract
 {
@@ -17,6 +18,7 @@ class CustomerForm extends FormFrontAbstract
         $this
             ->setupModel(new Customer())
             ->setValidatorClass(CustomerCreateRequest::class)
+            ->includeFiles()
             ->withCustomFields()
             ->add('first_name', 'text', [
                 'label' => trans('plugins/dashplugin::customer.form.first_name'),
@@ -87,7 +89,10 @@ class CustomerForm extends FormFrontAbstract
                 'html' => '</div>',
             ])
             ->add('status', SelectField::class, StatusFieldOption::make()->choices(CustomerStatusEnum::labels())->toArray())
-            ->add('avatar', MediaFileField::class)
+            ->add('roles', 'select', [
+                'choices' => CustomerRole::pluck('name', 'id')->toArray(),
+            ])
+            ->add('avatar', MediaImageField::class)
             ->setBreakFieldPoint('status');
     }
 }

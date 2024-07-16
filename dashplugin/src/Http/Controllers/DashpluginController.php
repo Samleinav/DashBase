@@ -50,8 +50,8 @@ class DashpluginController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setPreviousUrl(route('customer.index'))
-            ->setNextUrl(route('customer.edit', $form->getModel()->getKey()))
+            ->setPreviousUrl(route('public.user.index'))
+            ->setNextUrl(route('public.user.edit', $form->getModel()->getKey()))
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
 

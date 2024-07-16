@@ -1,0 +1,113 @@
+.simplebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding-bottom: 0 !important;
+  }
+  
+  [data-simplebar] {
+    left: 0;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 264px;
+  }
+  
+  .js-simplebar {
+    overflow-y: auto;
+    position: fixed;
+    max-width: 264px;
+    scrollbar-width: thin;
+  
+    /* Firefox */
+    scrollbar-color: #858796 transparent;
+  
+    /* Firefox */
+  }
+  
+  #sidebar {
+    scrollbar-width: thin;
+  
+    /* Firefox */
+    scrollbar-color: #858796 transparent;
+  
+    /* Firefox */
+  }
+  
+  .js-simplebar {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #858796;
+      border-radius: 10px;
+      border: 2px solid transparent;
+  
+      /* Espacio alrededor del scrollbar thumb */
+      background-clip: content-box;
+  
+      /* Hace que el color del thumb esté contenido dentro del espacio */
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-corner, &::-webkit-resizer {
+      display: none;
+  
+      /* Remueve las flechas */
+    }
+  }
+  
+  .card-header {
+    &:first-child {
+      border-radius: 4px 4px 0 0;
+    }
+  
+    align-items: center;
+    background: transparent;
+    color: inherit;
+    display: flex;
+    border-bottom: 0.1em solid #dddfe1;
+  
+    .card-title {
+      margin: 0;
+    }
+  }
+  
+  .preview-image-wrapper {
+    border: 1px solid var(--bb-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+  
+    .preview-image-inner {
+      overflow: hidden;
+      padding-top: 100%;
+      position: relative;
+      width: 100%;
+  
+      .image-box-actions {
+        height: 100%;
+        inset: 0;
+        position: absolute;
+        width: 100%;
+        z-index: 11;
+      }
+  
+      img.default-image {
+        padding: 10px;
+      }
+  
+      .preview-image {
+        height: 100%;
+        inset: 0;
+        -o-object-fit: cover;
+        object-fit: cover;
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+  
